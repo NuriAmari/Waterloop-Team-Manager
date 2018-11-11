@@ -12,6 +12,7 @@ class HelloMessage extends React.Component {
         console.log("Component Will Mount");
         axios.get("http://127.0.0.1:4000/name").then((response) => {
             console.log(response);
+            this.setState({name: response.data});
         }).catch((error) => {
             console.log(error);
         });
