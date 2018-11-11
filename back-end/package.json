@@ -1,0 +1,24 @@
+{
+  "name": "waterloop-team-manager-back",
+  "version": "1.0.0",
+  "description": "A team manager application for Waterloop",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NuriAmari/Waterloop-Team-Manager.git"
+  },
+  "author": "Nuri Amari",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/NuriAmari/Waterloop-Team-Manager/issues"
+  },
+  "homepage": "https://github.com/NuriAmari/Waterloop-Team-Manager#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.16.4",
+    "express-session": "^1.15.6"
+  }
+}
