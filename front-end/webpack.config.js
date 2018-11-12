@@ -12,7 +12,7 @@ const envKeys = Object.keys(env).reduce((prev, next) => {
 
 const config = {
     devtool: 'source-map',
-    entry: './src/app.js',
+    entry: './src/index.js',
     output: {
         path: path.resolve(__dirname, 'dist'),
         filename: 'bundle.js'

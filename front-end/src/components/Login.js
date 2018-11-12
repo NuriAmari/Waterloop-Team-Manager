@@ -1,11 +1,16 @@
 import React from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
+import { withRouter } from 'react-router-dom';
+
+axios.defaults.withCredentials = true;
 
 class Login extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            loginFailed: false,
+            loginSuccessfull: false,
             username: "",
             password: "",
         }
@@ -31,22 +36,34 @@ class Login extends React.Component {
     handleSubmit(event) {
         event.persist();
         event.preventDefault();
+        this.setState((prevState, props) => {
+            prevState.loginFailed = false;
+            return prevState;
+        });
         axios.post(`${process.env.BACK_END_URL}/login`,
             {username: this.state.username, password: this.state.password}
         ).then((response) => {
-            console.log(response);
+            if (response.data.authStatus) {
+                this.props.redirectFnc(() => this.props.history.push('/dashboard'));
+            } else {
+                this.setState(prevState => ({...prevState, loginFailed: true}));
+            }
         });
     }
 
     render() {
         return (
-            <div>
+            <Wrapper>
+                <img width="180px" src="../../img/waterloop_icon.svg"/>
+                {this.state.loginFailed &&
+                        <p>Username or password is wrong</p>
+                }
                 <form onSubmit={this.handleSubmit}>
-                    <input type="text" name="username" onChange={this.handleChange}/>
-                    <input type="password" name="password" onChange={this.handleChange}/>
+                    <input placeholder="Username" type="text" name="username" onChange={this.handleChange}/>
+                    <input placeholder="Password" type="password" name="password" onChange={this.handleChange}/>
                     <input type="submit" value="Log In"/>
                 </form>
-            </div>
+            </Wrapper>
         );
     }
 }
@@ -58,6 +75,30 @@ const Wrapper = styled.div`
     justify-content: center;
     width: 100%;
     height: 100%;
+    flex-direction: column;
+
+    form {
+        margin-top: 20px;
+        flex-direction: column;
+        width: 100%;
+        display: flex;
+        align-items: center;
+    }
+
+    input {
+       height: 25px;
+       width: 80%;
+       max-width: 300px;
+       margin-top: 20px;
+       padding: 3px;
+       padding-left: 5px;
+       border: 1px solid black;
+    }
+
+    input[type=submit] {
+       background-color: black; 
+       color: white;
+    }
 `;
 
-export default Login;
+export default withRouter(Login);
