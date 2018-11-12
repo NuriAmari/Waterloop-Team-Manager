@@ -38,12 +38,14 @@ app.use(session({
     saveUninitialized: false,
 }));
 
+app.use(express.json());
+
 app.get('/name', (req, res) => res.send('Nuri'));
 app.post('/login', (req, res) => {
     User.findOne({username: req.body.username, password: req.body.password }, (error, userData) => {
         if (error) throw error;
-        res.setHeader(200, {'Content-Type': 'application/json'});
-        if (!user) {
+        res.setHeader('200', {'Content-Type': 'application/json'});
+        if (!userData) {
             var response = {
                 'authStatus': 'denied',
                 'message': 'no user found',
@@ -52,7 +54,7 @@ app.post('/login', (req, res) => {
         } else {
             var response = {
                 'authSatus': 'success',
-                'username': user.username,
+                'username': userData.username,
             }    
             req.session.authenticated = true;
             res.end(JSON.stringify(response));
@@ -62,7 +64,7 @@ app.post('/login', (req, res) => {
 
 app.get('/authCheck', (req, res) => {
 
-    res.setHeader(200, {'Content-Type': 'application/json'});
+    res.setHeader('200', {'Content-Type': 'application/json'});
     if (req.session.authenticated) {
         var response = {
             'authStatus': 'success',

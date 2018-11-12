@@ -1,27 +1,44 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import axios from 'axios';
+import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
+import Login from "./components/Login";
+import Dashboard from "./components/Dashboard";
+import PageNotFound from "./components/PageNotFound";
 
-class HelloMessage extends React.Component {
+class App extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {name: "Chris"};
     }
-    
-    componentWillMount() {
-        console.log("Component Will Mount");
-        axios.get("http://127.0.0.1:4000/name").then((response) => {
-            console.log(response);
-            this.setState({name: response.data});
-        }).catch((error) => {
-            console.log(error);
-        });
-    }
-        
+
     render() {
-        return <div>Hello {this.state.name}</div>;
+        return (
+            <Router>
+                <Switch>
+                    <Route path="/" exact component={Login} />
+                    <Route component={PageNotFound}/>
+                </Switch>
+            </Router>
+        );
     }
 }
 
+    /*const auth = {
+    isAuthenticated: false,
+    authenticate(username, password, callback) {
+        
+                    <PrivateRoute path="/dashboard" component={Dashboard} />
+    },
+    signout(callback) {
+
+    }
+};*/
+
+
 var mountNode = document.getElementById("app");
-ReactDOM.render(<HelloMessage name="Muthu" />, mountNode);
+ReactDOM.render(<App/>, mountNode);
+
+// I have no idea what this does
+if (module.hot) {
+    module.hot.accept();
+}
