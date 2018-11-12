@@ -1,7 +1,12 @@
 const express = require('express');
+const session = require('express-session');
 const app = express();
 const cors = require('cors');
+const mongoose = require('mongoose');
 const port = 4000;
+require('dotenv').config();
+
+mongoose.connect(process.env.DB_URL, {useNewUrlParser: true });
 
 // create a list of domains to white list from cors protection
 const whitelist = ['file:///Users/nuriamari/Developer/Waterloop/Waterloop-Team-Manager/front-end/dist/index.html']
@@ -17,7 +22,17 @@ const corsOptions = {
 
 app.use(cors());
 
-app.get('/name', (req, res) => res.send('Nuri'));
+// set session data to only save on change and initial modification
+app.use(session({
+    secret: 'waterwaterwater',
+    resave: false,
+    saveUninitialized: false,
+}));
 
-app.listen(port, () => console.log(`Example app listening on port ${port}!`));
+app.get('/name', (req, res) => res.send('Nuri'));
+app.post('/login', (req, res) => {
+
+});
+
+app.listen(process.env.PORT, () => console.log(`Example app listening on port ${port}!`));
 
