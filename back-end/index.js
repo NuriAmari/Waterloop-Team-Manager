@@ -45,10 +45,10 @@ app.use(session({
     cookie: { secure: false }
 }));
 
-app.get('/name', (req, res) => {
-    console.log(req.session.id);    
-    res.send('Nuri')
+app.get('/react*', (req, res) => {
+  res.sendFile('/public/index.html');
 });
+
 app.post('/login', (req, res) => {
     User.findOne({username: req.body.username, password: req.body.password }, (error, userData) => {
         if (error) throw error;
@@ -65,6 +65,7 @@ app.post('/login', (req, res) => {
                 'username': userData.username,
             }    
             req.session.authenticated = true;
+            req.session.userId = userData.id;
             console.log(req.session.id);
             res.end(JSON.stringify(response));
         }

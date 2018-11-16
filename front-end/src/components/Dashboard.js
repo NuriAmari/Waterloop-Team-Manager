@@ -1,9 +1,18 @@
 import React from 'react';
+import Navbar from './general/Navbar';
 
 class Dashboard extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            user: "",
+        }
+    }
+
     render() {
-        console.log("We have arrived in the dashboard");
-        return <h1>Dashboard</h1>;
+        return (
+            <Navbar user={this.state.user}/>
+        );
     }
 }
 

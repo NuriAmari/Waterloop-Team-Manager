@@ -56,7 +56,7 @@ class Login extends React.Component {
             <Wrapper>
                 <img width="180px" src="../../img/waterloop_icon.svg"/>
                 {this.state.loginFailed &&
-                        <p>Username or password is wrong</p>
+                    <p>Username or password is wrong</p>
                 }
                 <form onSubmit={this.handleSubmit}>
                     <input placeholder="Username" type="text" name="username" onChange={this.handleChange}/>
@@ -97,6 +97,7 @@ const Wrapper = styled.div`
 
     input[type=submit] {
        background-color: black; 
+       height: 40px;
        color: white;
     }
 `;
