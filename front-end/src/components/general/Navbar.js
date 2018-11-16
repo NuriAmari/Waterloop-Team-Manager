@@ -42,7 +42,7 @@ const StyledBar = styled.div`
     justify-content: space-between;
 
     > img {
-        height: 30px;
+        height: 31px;
         margin: 10px;
     }
 
