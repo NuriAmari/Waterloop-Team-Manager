@@ -1,60 +1,68 @@
 import React from 'react';
-import styled from 'styled-components';
-import { withRouter } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Dropdown from './UserDropdown';
+import {
+  Collapse,
+  Navbar,
+  NavbarToggler,
+  NavbarBrand,
+  Nav,
+  NavItem,
+  NavLink,
+  UncontrolledDropdown,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem } from 'reactstrap';
 
-class Navbar extends React.Component {
-    constructor(props) {
-        super(props);
-        this.profileDropdown = React.createRef();
-        this.profileClickHandler = this.profileClickHandler.bind(this);
-        this.state = {
-            user: props.user,
-        }
-    }
+class NavBar extends React.Component {
+  constructor(props) {
+    super(props);
 
-    profileClickHandler(event) {
-        this.profileDropdown.current.toggle();
-    }
-
-    render() {
-        return (
-            <StyledBar>
-                <img src='../../../img/waterloop_icon_white.svg'/>
-                <div onClick={this.profileClickHandler} id='profile-dropdown-btn'>
-                    <FontAwesomeIcon icon="user" />
-
-                    <Dropdown ref={this.profileDropdown}/>
-                </div>
-            </StyledBar>
-        );
-    }
+    this.toggle = this.toggle.bind(this);
+    this.state = {
+      isOpen: false
+    };
+  }
+  toggle() {
+    this.setState({
+      isOpen: !this.state.isOpen
+    });
+  }
+  render() {
+    return (
+      <div>
+        <Navbar color="light" light expand="md">
+          <NavbarBrand href="/">reactstrap</NavbarBrand>
+          <NavbarToggler onClick={this.toggle} />
+          <Collapse isOpen={this.state.isOpen} navbar>
+            <Nav className="ml-auto" navbar>
+              <NavItem>
+                <NavLink href="/components/">Components</NavLink>
+              </NavItem>
+              <NavItem>
+                <NavLink href="https://github.com/reactstrap/reactstrap">GitHub</NavLink>
+              </NavItem>
+              <UncontrolledDropdown nav inNavbar>
+                <DropdownToggle nav caret>
+                  Options
+                </DropdownToggle>
+                <DropdownMenu right>
+                  <DropdownItem>
+                    Option 1
+                  </DropdownItem>
+                  <DropdownItem>
+                    Option 2
+                  </DropdownItem>
+                  <DropdownItem divider />
+                  <DropdownItem>
+                    Reset
+                  </DropdownItem>
+                </DropdownMenu>
+              </UncontrolledDropdown>
+            </Nav>
+          </Collapse>
+        </Navbar>
+      </div>
+    );
+  }
 }
 
-const StyledBar = styled.div`
-    
-    width: 100%;
-    height: 50px;
-    background: black;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-
-    > img {
-        height: 31px;
-        margin: 10px;
-    }
-
-    div {
-        height: 50px;
-        width: 50px;
-
-        svg {
-            height: 50px;
-            color: white;
-        }
-    }
-`;
-
-export default Navbar;
+export default NavBar;

@@ -1,7 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
-import { withRouter } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
+import { Alert, FormGroup, Label, Form, Button, Input } from 'reactstrap';
+
 
 axios.defaults.withCredentials = true;
 
@@ -54,15 +56,29 @@ class Login extends React.Component {
     render() {
         return (
             <Wrapper>
-                <img width="180px" src="../../img/waterloop_icon.svg"/>
-                {this.state.loginFailed &&
-                    <p>Username or password is wrong</p>
-                }
-                <form onSubmit={this.handleSubmit}>
-                    <input placeholder="Username" type="text" name="username" onChange={this.handleChange}/>
-                    <input placeholder="Password" type="password" name="password" onChange={this.handleChange}/>
-                    <input type="submit" value="Log In"/>
-                </form>
+                <img width="120px" src="../../img/waterloop_icon.svg"/>
+                <h3>Sign in to WatHub</h3>
+                <Form onSubmit={this.handleSubmit}>
+                    {this.state.loginFailed &&
+                        <Alert color="danger">
+                            <p>Username or password is wrong</p>
+                        </Alert>
+                    }
+                    <div id="formWrapper" className="border">
+                        <FormGroup>
+                            <Label for="username">Username</Label>
+                            <Input type="text" name="username" id="username" onChange={this.handleChange}/>
+                        </FormGroup>
+                        <FormGroup>
+                            <Label for="password">Password</Label>
+                            <Input id="password" type="password" name="password" onChange={this.handleChange}/>
+                        </FormGroup>
+                        <Button color="warning" type="submit" value="Log In">Sign in</Button>
+                    </div>
+                    <div className="border" id="newAccount">
+                        <p>New to WatHub? <Link to="/signup">Create an account.</Link></p>
+                    </div>
+                </Form>
             </Wrapper>
         );
     }
@@ -75,31 +91,57 @@ const Wrapper = styled.div`
     justify-content: center;
     width: 100%;
     height: 100%;
+    background-color: #fafafa;
     flex-direction: column;
 
-    form {
+    h3 {
+        margin-top: 20px;
+    }
+
+    Button {
+        width: 100%;
+    }
+
+    .alert {
+        width: 100%;
+        p {
+            margin: 0;
+        }
+    }
+
+    .border {
+        border-radius: 3px;
+    }
+
+    #newAccount {
+        border-radius: 3px;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 15px;
+        
+        p {
+            margin: 0;
+        }
+    }
+
+    Form {
+        Input {
+            min-width: 300px;
+        }
         margin-top: 20px;
         flex-direction: column;
-        width: 100%;
         display: flex;
         align-items: center;
     }
 
-    input {
-       height: 25px;
-       width: 80%;
-       max-width: 300px;
-       margin-top: 20px;
-       padding: 3px;
-       padding-left: 5px;
-       border: 1px solid black;
-    }
-
-    input[type=submit] {
-       background-color: black; 
-       height: 40px;
-       color: white;
+    #formWrapper {
+        padding: 20px;
+        margin-bottom: 20px;
+        background-color: white;
     }
 `;
+
 
 export default withRouter(Login);
