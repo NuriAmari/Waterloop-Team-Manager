@@ -4,7 +4,6 @@ import axios from 'axios';
 import { Link, withRouter } from 'react-router-dom';
 import { Alert, FormGroup, Label, Form, Button, Input } from 'reactstrap';
 
-
 axios.defaults.withCredentials = true;
 
 class Login extends React.Component {

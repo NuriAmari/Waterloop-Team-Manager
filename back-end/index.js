@@ -45,9 +45,6 @@ app.use(session({
     cookie: { secure: false }
 }));
 
-app.get('/react*', (req, res) => {
-  res.sendFile('/public/index.html');
-});
 
 app.post('/login', (req, res) => {
     User.findOne({username: req.body.username, password: req.body.password }, (error, userData) => {
@@ -70,6 +67,11 @@ app.post('/login', (req, res) => {
             res.end(JSON.stringify(response));
         }
     });
+});
+
+app.post('/logout', (req, res) => {
+    req.session.authenticated = false;
+    res.end();
 });
 
 app.get('/authCheck', (req, res) => {

@@ -10,52 +10,59 @@ import {
   UncontrolledDropdown,
   DropdownToggle,
   DropdownMenu,
-  DropdownItem } from 'reactstrap';
+    DropdownItem } from 'reactstrap';
+import axios from 'axios';
+import { withRouter } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import styled from 'styled-components';
 
 class NavBar extends React.Component {
   constructor(props) {
     super(props);
-
     this.toggle = this.toggle.bind(this);
     this.state = {
       isOpen: false
     };
+    this.logOutHandler= this.logOutHandler.bind(this);
   }
   toggle() {
     this.setState({
       isOpen: !this.state.isOpen
     });
   }
+  logOutHandler(event) {
+      // Log the user out
+      axios.post(`${process.env.BACK_END_URL}/logout`).then(() => {
+          console.log(this);
+        this.props.history.push('/');
+    });
+  }
   render() {
     return (
       <div>
-        <Navbar color="light" light expand="md">
-          <NavbarBrand href="/">reactstrap</NavbarBrand>
+        <Navbar color="dark" dark expand="md">
+            <NavbarBrand href="/dashboard">
+                <img height="20px" src="../../img/waterloop_icon_white.svg"/>
+            </NavbarBrand>
           <NavbarToggler onClick={this.toggle} />
           <Collapse isOpen={this.state.isOpen} navbar>
             <Nav className="ml-auto" navbar>
-              <NavItem>
-                <NavLink href="/components/">Components</NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink href="https://github.com/reactstrap/reactstrap">GitHub</NavLink>
-              </NavItem>
               <UncontrolledDropdown nav inNavbar>
                 <DropdownToggle nav caret>
-                  Options
+                    <FontAwesomeIcon icon="user" />                  
                 </DropdownToggle>
-                <DropdownMenu right>
+                <StyledDropdownMenu right>
                   <DropdownItem>
-                    Option 1
+                    Profile   
                   </DropdownItem>
                   <DropdownItem>
-                    Option 2
+                    Settings 
                   </DropdownItem>
                   <DropdownItem divider />
-                  <DropdownItem>
-                    Reset
+                  <DropdownItem onClick={this.logOutHandler}>
+                    Log Out
                   </DropdownItem>
-                </DropdownMenu>
+                </StyledDropdownMenu>
               </UncontrolledDropdown>
             </Nav>
           </Collapse>
@@ -65,4 +72,7 @@ class NavBar extends React.Component {
   }
 }
 
-export default NavBar;
+const StyledDropdownMenu= styled(DropdownMenu) `
+`;
+
+export default withRouter(NavBar);
