@@ -2,13 +2,31 @@ import React from 'react';
 import Navbar from './general/Navbar';
 import styled from 'styled-components';
 import ResourceTabs from './general/ResourceTabs';
+import axios from 'axios';
+
+axios.defaults.withCredentials = true;
 
 class Dashboard extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            user: "",
+            user: {
+                firstname: '',
+                lastname: '',
+                team: '',
+            },
         }
+    }
+
+    componentDidMount() {
+        axios.get(`${process.env.BACK_END_URL}/user`).then((response) => {
+            var newUser = {};
+            for (var key in response.data) {
+                if (!response.data.hasOwnProperty(key)) continue;
+                newUser[key] = response.data[key];
+            }
+            this.setState({user: newUser});
+        });
     }
 
     render() {
@@ -19,17 +37,24 @@ class Dashboard extends React.Component {
                     <div id='profile'>
                         <div id="fakeProfilePic">
                         </div>
-                        <h3>User Name</h3>
-                        <p>Web - Team Member</p>
+                        <h3>{`${this.state.user.firstname} ${this.state.user.lastname}`}</h3>
+                        { this.state.user.team &&
+                                <p>{(this.state.user.role ? this.state.user.role + " - ": '') + this.state.user.team}</p>
+                        }
                     </div>
                     <div id="resources">
-                        <ResourceTabs/>
+                        <ResourceTabs user={this.state.user}/>
                     </div>
                 </div>
             </Wrapper>
         );
     }
 }
+/*
+ *
+ <p>{(this.state.user.role ? `${this.state.user.role} - ` : '') + 
+                            (this.sate.user.team ? this.state.user.team : '')}
+                        </p>*/
 
 const Wrapper = styled.div`
 

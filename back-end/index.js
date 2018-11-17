@@ -74,6 +74,17 @@ app.post('/logout', (req, res) => {
     res.end();
 });
 
+app.get('/user', (req, res) => {
+    User.findOne({_id: req.session.userId}, (err, userData) => {
+        res.setHeader('200', {'Content-Type': 'application/json'});
+        if (!userData) {
+            throw("A user with active session should always exist");
+        } else {
+            res.end(JSON.stringify(userData));
+        }
+    });
+});
+
 app.get('/authCheck', (req, res) => {
     //console.log(req);
     res.setHeader('200', {'Content-Type': 'application/json'});

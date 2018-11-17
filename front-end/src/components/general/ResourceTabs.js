@@ -2,15 +2,18 @@ import React from 'react';
 import { TabContent, TabPane, Nav, NavItem, NavLink, Card, Button, CardTitle, CardText, Row, Col } from 'reactstrap';
 import classnames from 'classnames';
 import styled from 'styled-components';
+import axios from 'axios';
+
+axios.defaults.withCredentials = true;
 
 class ResourceTabs extends React.Component {
   constructor(props) {
     super(props);
-
+    
     this.toggle = this.toggle.bind(this);
     this.state = {
         activeTab: '1',
-        availableResources: [],
+        user: props.user,
     };
   }
 
@@ -22,11 +25,22 @@ class ResourceTabs extends React.Component {
     }
   }
 
-  componentWillMount() {
-
+  componentDidMount() {
+        console.log(this.state.user);
+      console.log(this.state.user.resources);
   }
 
+    componentWillReceiveProps(newProps) {
+        this.setState((prevState, props) => ({...prevState, user: newProps.user})); 
+    }
+
   render() {
+      var resourceJSX = [];
+      console.log(this.state);
+      if (this.state.user.resources) {
+          console.log("🙏");
+          this.state.user.resources.map(resource => {resourceJSX.push(<div className="border">{resource}</div>)});
+      }
     return (
       <div>
         <Nav tabs>
@@ -53,7 +67,7 @@ class ResourceTabs extends React.Component {
               <Col sm="12">
                   <h6>Pinned Resources</h6>
                   <div id="pinnedResources">
-                  
+                    {resourceJSX}                    
                   </div>
               </Col>
             </Row>
