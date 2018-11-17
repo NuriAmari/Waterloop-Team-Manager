@@ -7,6 +7,7 @@ import Dashboard from "./Dashboard";
 import PageNotFound from "./PageNotFound";
 import RequireAuth from './general/RequireAuth';
 import SignUp from './SignUp';
+import Manage from './Manage';
 
 axios.defaults.withCredentials = true;
 
@@ -34,6 +35,7 @@ class App extends React.Component {
                     <Route path="/" exact component={() => <Login redirectFnc={auth.checkAuthStatus}/>} />
                     <Route path="/signup" exact component={SignUp}/>
                     <Route path="/dashboard" exact component={RequireAuth(Dashboard)}/>
+                    <Route path="/manage" exact component={RequireAuth(Manage)}/>
                     <Route component={PageNotFound}/>
                 </Switch>
             </Router>

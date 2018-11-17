@@ -1,12 +1,12 @@
 import { Component } from 'react';
-import { Redirect } from 'react-router-dom';
+import { Redirect, withRouter } from 'react-router-dom';
 import axios from 'axios';
 import React from 'react';
 axios.default.withCredentials = true;
 
 const RequireAuth = (Component) => { 
 
-    return class App extends React.Component { 
+     class App extends React.Component { 
         constructor(props) {
             super(props);
             this.state = {
@@ -15,14 +15,24 @@ const RequireAuth = (Component) => {
             }
         }
 
-        componentDidMount() {
-            axios.get(`${process.env.BACK_END_URL}\\authCheck`).then((response) => {
-                if (response.data.authStatus) {
-                    this.setState({isAuthenticated: true, isLoading: false});
-                } else {
-                    this.setState({isLoading: false});
-                }
-            });
+				componentDidMount() {
+						if (this.props.location === '\\manage') {
+								axios.get(`${process.env.BACK_END_URL}\\user`).then((response) => {
+										if (response.data.user.admin) {
+												this.setState({isAuthenticated: true, isLoading: false});
+										} else {
+												this.setState({isLoading: false});
+										}
+								});
+						} else {
+								axios.get(`${process.env.BACK_END_URL}\\authCheck`).then((response) => {
+										if (response.data.authStatus) {
+												this.setState({isAuthenticated: true, isLoading: false});
+										} else {
+												this.setState({isLoading: false});
+										}
+								});
+						}
         } 
 
         render() { 
@@ -35,7 +45,9 @@ const RequireAuth = (Component) => {
            }
            return <Component {...this.props} /> 
         }
-    } 
+		 } 
+
+		return withRouter(App);
 } 
 
 export default RequireAuth;

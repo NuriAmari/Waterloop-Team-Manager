@@ -45,7 +45,7 @@ class Login extends React.Component {
             {username: this.state.username, password: this.state.password}
         ).then((response) => {
             if (response.data.authStatus) {
-                this.props.redirectFnc(() => this.props.history.push('/dashboard'));
+                this.props.history.push('/dashboard');
             } else {
                 this.setState(prevState => ({...prevState, loginFailed: true}));
             }

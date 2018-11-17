@@ -28,7 +28,7 @@ class Dashboard extends React.Component {
             this.setState({user: newUser});
         });
     }
-
+        
     render() {
         return (
             <Wrapper>
@@ -50,11 +50,6 @@ class Dashboard extends React.Component {
         );
     }
 }
-/*
- *
- <p>{(this.state.user.role ? `${this.state.user.role} - ` : '') + 
-                            (this.sate.user.team ? this.state.user.team : '')}
-                        </p>*/
 
 const Wrapper = styled.div`
 

@@ -30,16 +30,16 @@ class ResourceTabs extends React.Component {
       console.log(this.state.user.resources);
   }
 
-    componentWillReceiveProps(newProps) {
-        this.setState((prevState, props) => ({...prevState, user: newProps.user})); 
-    }
+  componentWillReceiveProps(newProps) {
+      this.setState((prevState, props) => ({...prevState, user: newProps.user})); 
+  }
 
   render() {
       var resourceJSX = [];
       console.log(this.state);
       if (this.state.user.resources) {
-          console.log("🙏");
-          this.state.user.resources.map(resource => {resourceJSX.push(<div className="border">{resource}</div>)});
+          console.log(this.state.user.resources);
+          this.state.user.resources.map((resource, index) => {resourceJSX.push(<div key={index} className="border resourceElement">{resource}</div>)});
       }
     return (
       <div>
@@ -97,6 +97,12 @@ class ResourceTabs extends React.Component {
 }
 
 const StyledTabContent = styled(TabContent)`
+
+    .resourceElement {
+       padding: 20px; 
+       margin-bottom: 10px;
+    }
+
     .border {
         border-radius: 3px;
     }
