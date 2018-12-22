@@ -60,8 +60,6 @@ const auth = {
     }
 };
 
-
-
 function PrivateRoute({component: Component, ...rest }) {
     console.log(auth.authStatus);
     return (

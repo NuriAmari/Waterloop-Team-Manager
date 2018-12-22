@@ -15,24 +15,24 @@ const RequireAuth = (Component) => {
             }
         }
 
-				componentDidMount() {
-						if (this.props.location === '\\manage') {
-								axios.get(`${process.env.BACK_END_URL}\\user`).then((response) => {
-										if (response.data.user.admin) {
-												this.setState({isAuthenticated: true, isLoading: false});
-										} else {
-												this.setState({isLoading: false});
-										}
-								});
-						} else {
-								axios.get(`${process.env.BACK_END_URL}\\authCheck`).then((response) => {
-										if (response.data.authStatus) {
-												this.setState({isAuthenticated: true, isLoading: false});
-										} else {
-												this.setState({isLoading: false});
-										}
-								});
-						}
+        componentDidMount() {
+            if (this.props.location === '\\manage') {
+                axios.get(`${process.env.BACK_END_URL}\\user`).then((response) => {
+                    if (response.data.user.admin) {
+                            this.setState({isAuthenticated: true, isLoading: false});
+                    } else {
+                            this.setState({isLoading: false});
+                    }
+                });
+            } else {
+                axios.get(`${process.env.BACK_END_URL}\\authCheck`).then((response) => {
+                    if (response.data.authStatus) {
+                            this.setState({isAuthenticated: true, isLoading: false});
+                    } else {
+                            this.setState({isLoading: false});
+                    }
+                });
+            }
         } 
 
         render() { 
@@ -45,9 +45,8 @@ const RequireAuth = (Component) => {
            }
            return <Component {...this.props} /> 
         }
-		 } 
-
-		return withRouter(App);
+    } 
+    return withRouter(App);
 } 
 
 export default RequireAuth;

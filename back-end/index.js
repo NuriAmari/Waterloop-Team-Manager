@@ -85,6 +85,24 @@ app.get('/user', (req, res) => {
     });
 });
 
+app.get('/allUsers', (req, res) => {
+
+    if (req.session.authenticated) {
+        User.findOne({_id: req.session.userId}, (err, userData) => {
+            if (err) throw err;
+            if (userData.admin) {
+                User.find({}, (error, data) => {
+                    if (error) throw error;
+                    res.setHeader('200', {'Content-Type': 'application/json'}); 
+                    res.end(data);
+                });
+            }
+        });
+    } else {
+        res.end("request denied");
+    }
+});
+
 app.get('/authCheck', (req, res) => {
     //console.log(req);
     res.setHeader('200', {'Content-Type': 'application/json'});
