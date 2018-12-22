@@ -47,20 +47,32 @@ app.use(session({
 
 
 app.post('/login', (req, res) => {
-    User.findOne({username: req.body.username, password: req.body.password }, (error, userData) => {
+    User.findOne({username: req.body.username}, (error, userData) => {
         if (error) throw error;
         res.setHeader('200', {'Content-Type': 'application/json'});
         if (!userData) {
             var response = {
                 'authStatus': false,
-                'message': 'no user found',
+                'user': false,
+                'password': false,
             };
             res.end(JSON.stringify(response));
         } else {
-            var response = {
-                'authStatus': true,
-                'username': userData.username,
-            }    
+            if (userData.password === req.body.password) {
+                var response = {
+                    'authStatus': true,
+                    'password': true,
+                    'user': true,
+                    'username': userData.username,
+                }   
+            } else {
+                var response = {
+                    'authStatus': false,
+                    'password': false,
+                    'user': true,
+                    'username': userData.username,
+                }
+            }
             req.session.authenticated = true;
             req.session.userId = userData.id;
             console.log(req.session.id);
@@ -86,7 +98,6 @@ app.get('/user', (req, res) => {
 });
 
 app.get('/allUsers', (req, res) => {
-
     if (req.session.authenticated) {
         User.findOne({_id: req.session.userId}, (err, userData) => {
             if (err) throw err;
@@ -104,9 +115,7 @@ app.get('/allUsers', (req, res) => {
 });
 
 app.get('/authCheck', (req, res) => {
-    //console.log(req);
     res.setHeader('200', {'Content-Type': 'application/json'});
-    console.log(req.session.id);
     if (req.session.authenticated) {
         var response = {
             'authStatus': true,

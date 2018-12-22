@@ -2,18 +2,28 @@ import React from "react";
 import ReactDOM from "react-dom";
 import axios from 'axios';
 import { BrowserRouter as Router, Redirect, Route, Link, Switch, withRouter } from "react-router-dom";
-import Login from "./Login";
-import Dashboard from "./Dashboard";
-import PageNotFound from "./PageNotFound";
+import Login from "./pages/Login";
+import Dashboard from "./pages/Dashboard";
+import PageNotFound from "./pages/PageNotFound";
 import RequireAuth from './general/RequireAuth';
-import SignUp from './SignUp';
-import Manage from './Manage';
+import SignUp from './pages/SignUp';
+import Manage from './pages/Manage';
 
 axios.defaults.withCredentials = true;
 
 class App extends React.Component {
+    isMounted = false;
+
     constructor(props) {
         super(props);
+    }
+
+    componentDidMount() {
+        this.isMounted = true;
+    }
+
+    componentWillUnmount() {
+        this.isMounted = false;
     }
 
     redirectToPage(url) {
@@ -59,25 +69,5 @@ const auth = {
         authStatus = false;    
     }
 };
-
-function PrivateRoute({component: Component, ...rest }) {
-    console.log(auth.authStatus);
-    return (
-        <Route
-          {...rest}
-          render={props =>
-            auth.authStatus ? (
-              <Component {...props} />
-            ) : (
-              <Redirect
-                to={{
-                  pathname: "/",
-                  state: { from: props.location }
-                }}
-              />
-            )
-          }
-    />);
-}
 
 export default App;

@@ -3,6 +3,7 @@ const path = require('path');
 const dotenv = require('dotenv');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const ClassProperties = require('@babel/plugin-proposal-class-properties');
 
 const env = dotenv.config().parsed;
 const envKeys = Object.keys(env).reduce((prev, next) => {
@@ -53,7 +54,7 @@ const config = {
             filename: "index.html",  //target html
             template: "./dist/index.html" //source html
         }),
-        new ExtractTextPlugin({ filename: 'css/style.css' })
+        new ExtractTextPlugin({ filename: 'css/style.css' }),
     ]
 };
 

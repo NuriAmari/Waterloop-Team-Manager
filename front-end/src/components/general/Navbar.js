@@ -16,6 +16,9 @@ import { withRouter, Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import styled from 'styled-components';
 
+const CancelToken = axios.CancelToken;
+let cancel;
+
 class NavBar extends React.Component {
 constructor(props) {
 		super(props);
@@ -34,17 +37,26 @@ constructor(props) {
     linkHandler(event) {
         if (event.target.name === 'logout') {
 			// Log the user out
-			axios.post(`${process.env.BACK_END_URL}/logout`).then(() => {
+            axios.post(`${process.env.BACK_END_URL}/logout`, { cancelToken: new CancelToken(function executor(c) {
+                cancel = c;     
+            })}).then(() => {
                 console.log(this);
 				this.props.history.push('/');
             });
         } else if (event.target.name === 'manage') {
-            this.props.history.push('/manage');
+            axios.get(`${process.env.BACK_END_URL}/authCheck`, { cancelToken: new CancelToken(function executor(c) {
+                cancel = c; 
+            })}).then(() => {
+                this.props.history.push('/manage');
+            });
         }
 	}
 	componentWillReceiveProps(newProps) {
 			this.setState((prevState, props) => ({...prevState, user: newProps.user})); 	
-	}
+    }
+    componentWillUnmount() {
+        cancel();
+    }
 	render() {
 		return (
 			<div>
