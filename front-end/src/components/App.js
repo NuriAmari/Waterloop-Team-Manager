@@ -3,11 +3,10 @@ import ReactDOM from "react-dom";
 import axios from 'axios';
 import { BrowserRouter as Router, Redirect, Route, Link, Switch, withRouter } from "react-router-dom";
 import Login from "./pages/Login";
-import Dashboard from "./pages/Dashboard";
+import Home from "./pages/Home";
 import PageNotFound from "./pages/PageNotFound";
 import RequireAuth from './general/RequireAuth';
 import SignUp from './pages/SignUp';
-import Manage from './pages/Manage';
 
 axios.defaults.withCredentials = true;
 
@@ -44,8 +43,7 @@ class App extends React.Component {
                 <Switch>
                     <Route path="/" exact component={() => <Login redirectFnc={auth.checkAuthStatus}/>} />
                     <Route path="/signup" exact component={SignUp}/>
-                    <Route path="/dashboard" exact component={RequireAuth(Dashboard)}/>
-                    <Route path="/manage" exact component={RequireAuth(Manage)}/>
+                    <Route path="/dashboard" exact component={RequireAuth(Home)}/>
                     <Route component={PageNotFound}/>
                 </Switch>
             </Router>

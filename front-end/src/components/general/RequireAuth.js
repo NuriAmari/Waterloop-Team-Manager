@@ -5,8 +5,9 @@ import React from 'react';
 axios.default.withCredentials = true;
 
 const RequireAuth = (Component) => { 
-
-     class App extends React.Component { 
+    
+    class App extends React.Component { 
+        _isMounted = false;
         constructor(props) {
             super(props);
             this.state = {
@@ -16,24 +17,33 @@ const RequireAuth = (Component) => {
         }
 
         componentDidMount() {
+            this._isMounted = true;
             if (this.props.location === '\\manage') {
                 axios.get(`${process.env.BACK_END_URL}\\user`).then((response) => {
-                    if (response.data.user.admin) {
-                            this.setState({isAuthenticated: true, isLoading: false});
-                    } else {
-                            this.setState({isLoading: false});
+                    if (this._isMounted) {
+                        if (response.data.user.admin) {
+                                this.setState({isAuthenticated: true, isLoading: false});
+                        } else {
+                                this.setState({isLoading: false});
+                        }
                     }
                 });
             } else {
                 axios.get(`${process.env.BACK_END_URL}\\authCheck`).then((response) => {
-                    if (response.data.authStatus) {
-                            this.setState({isAuthenticated: true, isLoading: false});
-                    } else {
-                            this.setState({isLoading: false});
+                    if (this._isMounted) {
+                        if (response.data.authStatus) {
+                                this.setState({isAuthenticated: true, isLoading: false});
+                        } else {
+                                this.setState({isLoading: false});
+                        }
                     }
                 });
             }
         } 
+
+        componentWillUnmount() {
+            this._isMounted = false;
+        }
 
         render() { 
            const { isAuthenticated, isLoading } = this.state;
