@@ -3,11 +3,10 @@ import styled from 'styled-components';
 import axios from 'axios';
 import Navigation from '../general/Navigation';
 
-class Home extends React.Component {
+class Manage extends React.Component {
     constructor(props) {
         super(props);
     }
-
     render() {
         return (
             <div>
@@ -17,4 +16,4 @@ class Home extends React.Component {
     }
 }
 
-export default Home;
+export default Manage;

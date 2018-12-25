@@ -22,9 +22,9 @@ const RequireAuth = (Component) => {
                 axios.get(`${process.env.BACK_END_URL}\\user`).then((response) => {
                     if (this._isMounted) {
                         if (response.data.user.admin) {
-                                this.setState({isAuthenticated: true, isLoading: false});
+                            this.setState({isAuthenticated: true, isLoading: false});
                         } else {
-                                this.setState({isLoading: false});
+                            this.setState({isLoading: false});
                         }
                     }
                 });
@@ -32,9 +32,9 @@ const RequireAuth = (Component) => {
                 axios.get(`${process.env.BACK_END_URL}\\authCheck`).then((response) => {
                     if (this._isMounted) {
                         if (response.data.authStatus) {
-                                this.setState({isAuthenticated: true, isLoading: false});
+                            this.setState({isAuthenticated: true, isLoading: false});
                         } else {
-                                this.setState({isLoading: false});
+                            this.setState({isLoading: false});
                         }
                     }
                 });

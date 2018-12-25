@@ -12,27 +12,39 @@ import {
   DropdownMenu,
   DropdownItem } from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { withRouter } from 'react-router-dom';
+import axios from 'axios';
 
 class Navigation extends React.Component {
+  _isMounted = false;  
   constructor(props) {
     super(props);
-    this.toggle = this.toggle.bind(this);
-    this.state = {
-        isOpen: false,
-        isAdmin: false,
-    };
+      this.toggle = this.toggle.bind(this);
+      this.state = {
+          isOpen: false,
+          isAdmin: this.props.adminStatus,
+      };
   }
   toggle() {
     this.setState({
       isOpen: !this.state.isOpen
     });
   }
+
   componentDidMount() {
-      /*this.setState((prevState) => {
-        prevState.isAdmin = this.props.adminStatus;
-        return prevState;
-    });*/
+    this._isMounted = true;
   }
+
+  linkHandler(destination) {
+    if (destination === 'logout') {
+        axios.post(`${process.env.BACK_END_URL}/logout`).then(() => {
+            this.props.history.push('/');
+        });
+    } else if (destination === 'manage') {
+        this.props.history.push('/manage');
+    }
+  }
+
   render() {
     return (
       <div>
@@ -55,13 +67,13 @@ class Navigation extends React.Component {
                   <DropdownItem>
                     Account
                   </DropdownItem>
-                 { this.isAdmin &&
-                  <DropdownItem>
+                 { this.state.isAdmin &&
+                  <DropdownItem onClick={() => this.linkHandler('manage')}>
                     Manage
                   </DropdownItem>
                  }
                   <DropdownItem divider />
-                  <DropdownItem>
+                  <DropdownItem onClick={() => this.linkHandler('logout')}>
                     Logout
                   </DropdownItem>
                 </DropdownMenu>
@@ -74,4 +86,4 @@ class Navigation extends React.Component {
   }
 }
 
-export default Navigation;
+export default withRouter(Navigation);

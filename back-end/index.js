@@ -7,6 +7,7 @@ require('dotenv').config();
 
 // db models
 const User = require('./models/user');
+const OnboardingCode = require('./models/onboardingcode');
 
 // connect to db
 mongoose.connect(process.env.DB_URL, {useNewUrlParser: true }, (error) => {
@@ -76,6 +77,32 @@ app.post('/login', (req, res) => {
             req.session.authenticated = true;
             req.session.userId = userData.id;
             console.log(req.session.id);
+            res.end(JSON.stringify(response));
+        }
+    });
+});
+
+app.post('/newUser', (req,res) => {
+    res.setHeader('200', {'Content-Type': 'application/json'});
+    OnboardingCode.findOne({code: req.body.code}, (err, data) => {
+        let response;
+        if (data) {
+            User user = new User();
+            user.name = req.body.firstname + " " + req.body.lastname;
+            user.firstname = req.body.firstname;
+            user.lastname = req.body.lastname;
+            user.password = req.body.password;
+            user.admin = data.admin;
+            user.save((err) => {});
+            OnboardingCode.deleteOne({code: req.body.code}, (err) => {});
+            response = {
+                codeValid: true,
+            };
+            res.end(JSON.stringify(response));
+        } else {
+            response = {
+                codeValue: false,
+            }
             res.end(JSON.stringify(response));
         }
     });
