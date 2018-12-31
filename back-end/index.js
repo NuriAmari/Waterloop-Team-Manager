@@ -87,7 +87,7 @@ app.post('/newUser', (req,res) => {
     OnboardingCode.findOne({code: req.body.code}, (err, data) => {
         let response;
         if (data) {
-            User user = new User();
+            let user = new User();
             user.name = req.body.firstname + " " + req.body.lastname;
             user.firstname = req.body.firstname;
             user.lastname = req.body.lastname;
