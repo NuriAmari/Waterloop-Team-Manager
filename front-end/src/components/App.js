@@ -27,9 +27,8 @@ class App extends React.Component {
     }
 
     redirectToPage(url) {
-        if (url === '/dashboard') {
-            auth.checkStatus(() => this.props.history.push(url));
-        } else {
+        let authenticated = await auth.checkStatus(url);
+        if (authenticated) {
             this.props.history.push(url);
         }
     }
@@ -42,7 +41,7 @@ class App extends React.Component {
         return (
             <Router>
                 <Switch>
-                    <Route path="/" exact component={() => <Login redirectFnc={auth.checkAuthStatus}/>} />
+                    <Route path="/" exact component={() => <Login redirectFnc={redirectToPage}/>} />
                     <Route path="/signup" exact component={SignUp}/>
                     <Route path="/dashboard" exact component={RequireAuth(Home)}/>
                     <Route path="/manage" exact component={RequireAuth(Manage)}/>
@@ -54,19 +53,17 @@ class App extends React.Component {
 }
 
 const auth = {
-    isLoading: false,
-    authStatus: false,
-    checkAuthStatus(callback) {
+    async checkPermission(url) {
         axios.get(`${process.env.BACK_END_URL}\\authCheck`).then((response) => {
-            if (response.data.authStatus) {
-                auth.authStatus = true;
-                callback();
+            if (url === 'signin' || url === 'signup') return true;
+            else if (url === 'manage') {
+               return response.data.authStatus && response.data.admin; 
             }
+            return response.data.authStatus;
         });
     },
     signout(callback) {
         axios.post(`process.env.BACK_END_URL\${signOut}`);
-        authStatus = false;    
     }
 };
 

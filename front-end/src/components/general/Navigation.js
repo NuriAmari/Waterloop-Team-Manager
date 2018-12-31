@@ -36,12 +36,14 @@ class Navigation extends React.Component {
   }
 
   linkHandler(destination) {
-    if (destination === 'logout') {
-        axios.post(`${process.env.BACK_END_URL}/logout`).then(() => {
+      if (destination === 'logout') {
+          this.props.redirectFnc('logout');
+          /*axios.post(`${process.env.BACK_END_URL}/logout`).then(() => {
             this.props.history.push('/');
-        });
-    } else if (destination === 'manage') {
-        this.props.history.push('/manage');
+        });*/
+      } else if (destination === 'manage') {
+          this.props.redirectFnc('manage');
+          //this.props.history.push('/manage');
     }
   }
 

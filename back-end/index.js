@@ -76,6 +76,7 @@ app.post('/login', (req, res) => {
             }
             req.session.authenticated = true;
             req.session.userId = userData.id;
+            req.session.admin = userData.admin;
             console.log(req.session.id);
             res.end(JSON.stringify(response));
         }
@@ -143,17 +144,11 @@ app.get('/allUsers', (req, res) => {
 
 app.get('/authCheck', (req, res) => {
     res.setHeader('200', {'Content-Type': 'application/json'});
-    if (req.session.authenticated) {
-        var response = {
-            'authStatus': true,
-        };
-        res.end(JSON.stringify(response));
-    } else {
-        var response = {
-            'authStatus': false,
-        };
-        res.end(JSON.stringify(response));
+    const response = { 
+        'authStatus': req.session.authenticated,
+        'admin': req.session.admin,
     }
+    res.end(JSON.stringify(response)); 
 });
 
 app.listen(process.env.PORT, () => console.log(`Example app listening on port ${process.env.PORT}!`));
