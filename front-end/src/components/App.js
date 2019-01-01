@@ -16,7 +16,6 @@ class App extends React.Component {
 
     constructor(props) {
         super(props);
-        this.redirectToPage = this.redirectToPage.bind(this);
     }
 
     componentDidMount() {
@@ -27,17 +26,7 @@ class App extends React.Component {
         this.isMounted = false;
     }
 
-    redirectToPage(url) {
-        let authenticated = auth.checkPermission(url);
-        console.log("URL: " + url + " AUTH " + authenticated);
-        if (authenticated) {
-            console.log(this);
-            context.push(url);
-        }
-    }
-        
     render() {
-        console.log(this.redirectToPage);
         return (
             <Router>
                 <Switch>
@@ -54,13 +43,12 @@ class App extends React.Component {
 
 const auth = {
     async checkPermission(url) {
-        axios.get(`${process.env.BACK_END_URL}\\authCheck`).then((response) => {
-            if (url === 'signin' || url === 'signup' || url === 'logout') return true;
-            else if (url === 'manage') {
-               return response.data.authStatus && response.data.admin; 
-            }
-            return response.data.authStatus;
-        });
+        if (url === 'signin' || url === 'signup' || url === 'logout') return true;
+        let response = await axios.get(`${process.env.BACK_END_URL}\\authCheck`);
+        if (url === 'manage') {
+            return response.data.authStatus && response.data.admin; 
+        }
+        return response.data.authStatus;
     },
     signout(callback) {
         axios.post(`process.env.BACK_END_URL\${signOut}`);

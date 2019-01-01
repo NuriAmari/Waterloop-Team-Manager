@@ -14,16 +14,23 @@ const RequireAuth = (Component, checkStatus) => {
                 isAuthenticated: false,
                 isLoading: true,
             }
+            this.verifyPermissions = this.verifyPermissions.bind(this);
+        }
+
+        async verifyPermissions() {
+            let authenticated = await checkStatus(this.props.location);
+            console.log(authenticated);
+            if (authenticated) {
+                if (this._isMounted) this.setState({isAuthenticated: true, isLoading: false});
+            } else {
+                console.log(authenticated);
+                if (this._isMounted) this.setState({isAuthenticated: false, isLoading: false});
+            }
         }
 
         componentDidMount() {
             this._isMounted = true;
-            let authenticated = checkStatus(this.props.location);
-            if (authenticated) {
-                if (this._isMounted) this.setState({isAuthenticated: true, isLoading: false});
-            } else {
-                if (this._isMounted) this.setState({isAuthenticated: false, isLoading: false});
-            }
+            this.verifyPermissions(); 
         } 
 
         componentWillUnmount() {
