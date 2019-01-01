@@ -6,7 +6,6 @@ import {
     NavbarBrand,
     Nav,
     NavItem,
-    NavLink,
     UncontrolledDropdown,
     DropdownToggle,
     DropdownMenu,
@@ -15,6 +14,7 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { withRouter } from 'react-router-dom';
 import axios from 'axios';
+import styled from 'styled-components';
 
 class Navigation extends React.Component {
     _isMounted = false;
@@ -40,7 +40,7 @@ class Navigation extends React.Component {
     }
 
     linkHandler(destination) {
-        this.toggle();
+        if (this.state.isOpen) this.toggle();
         if (destination === 'logout') {
             axios.post(`${process.env.BACK_END_URL}/logout`).then(() => {
                 this.props.history.push('/');
@@ -55,44 +55,37 @@ class Navigation extends React.Component {
     render() {
         return (
             <div>
-                <Navbar color="light" light expand="md">
+                <Navbar color="dark" dark expand="md">
                     <NavbarBrand href="/">WatHub</NavbarBrand>
                     <NavbarToggler onClick={this.toggle} />
                     <Collapse isOpen={this.state.isOpen} navbar>
                         <Nav className="ml-auto" navbar>
                             <NavItem>
-                                <NavLink href="/resources">Resources</NavLink>
-                            </NavItem>
-                            <NavItem>
-                                <NavLink href="https://github.com/reactstrap/reactstrap">
-                                    {this.props.test}
+                                <NavLink
+                                    onClick={() => this.linkHandler('Home')}
+                                >
+                                    Home
                                 </NavLink>
                             </NavItem>
-                            <UncontrolledDropdown nav inNavbar>
-                                <DropdownToggle nav caret>
-                                    <FontAwesomeIcon icon="user" />
-                                </DropdownToggle>
-                                <DropdownMenu right>
-                                    <DropdownItem>Account</DropdownItem>
-                                    {this.state.isAdmin && (
-                                        <DropdownItem
-                                            onClick={() =>
-                                                this.linkHandler('manage')
-                                            }
-                                        >
-                                            Manage
-                                        </DropdownItem>
-                                    )}
-                                    <DropdownItem divider />
-                                    <DropdownItem
+                            <NavItem />
+                            {this.state.isAdmin && (
+                                <NavItem>
+                                    <NavLink
                                         onClick={() =>
-                                            this.linkHandler('logout')
+                                            this.linkHandler('manage')
                                         }
                                     >
-                                        Logout
-                                    </DropdownItem>
-                                </DropdownMenu>
-                            </UncontrolledDropdown>
+                                        Manage
+                                    </NavLink>
+                                </NavItem>
+                            )}
+                            <NavItem>
+                                <NavLink
+                                    onClick={() => this.linkHandler('logout')}
+                                >
+                                    Logout
+                                </NavLink>
+                            </NavItem>
                         </Nav>
                     </Collapse>
                 </Navbar>
@@ -100,5 +93,11 @@ class Navigation extends React.Component {
         );
     }
 }
+
+const NavLink = styled.div`
+    color: white;
+    padding: 4px;
+    cursor: pointer;
+`;
 
 export default withRouter(Navigation);
