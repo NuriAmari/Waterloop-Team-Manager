@@ -16,6 +16,7 @@ class App extends React.Component {
 
     constructor(props) {
         super(props);
+        this.redirectToPage = this.redirectToPage.bind(this);
     }
 
     componentDidMount() {
@@ -27,24 +28,23 @@ class App extends React.Component {
     }
 
     redirectToPage(url) {
-        let authenticated = await auth.checkStatus(url);
+        let authenticated = auth.checkPermission(url);
+        console.log("URL: " + url + " AUTH " + authenticated);
         if (authenticated) {
-            this.props.history.push(url);
+            console.log(this);
+            context.push(url);
         }
     }
         
-    redirectToProtectedPage(url) {
-        auth.checkStatus(() => this.props.history.push(url));
-    }
-
     render() {
+        console.log(this.redirectToPage);
         return (
             <Router>
                 <Switch>
-                    <Route path="/" exact component={() => <Login redirectFnc={redirectToPage}/>} />
+                    <Route path="/" exact component={() => <Login/>} />
                     <Route path="/signup" exact component={SignUp}/>
-                    <Route path="/dashboard" exact component={RequireAuth(Home)}/>
-                    <Route path="/manage" exact component={RequireAuth(Manage)}/>
+                    <Route path="/dashboard" exact component={RequireAuth(Home, auth.checkPermission)}/>
+                    <Route path="/manage" exact component={RequireAuth(Manage, auth.checkPermission)}/>
                     <Route component={PageNotFound}/>
                 </Switch>
             </Router>
@@ -55,7 +55,7 @@ class App extends React.Component {
 const auth = {
     async checkPermission(url) {
         axios.get(`${process.env.BACK_END_URL}\\authCheck`).then((response) => {
-            if (url === 'signin' || url === 'signup') return true;
+            if (url === 'signin' || url === 'signup' || url === 'logout') return true;
             else if (url === 'manage') {
                return response.data.authStatus && response.data.admin; 
             }

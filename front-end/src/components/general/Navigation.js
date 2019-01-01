@@ -16,15 +16,17 @@ import { withRouter } from 'react-router-dom';
 import axios from 'axios';
 
 class Navigation extends React.Component {
-  _isMounted = false;  
-  constructor(props) {
+    _isMounted = false;  
+    constructor(props) {
     super(props);
-      this.toggle = this.toggle.bind(this);
-      this.state = {
-          isOpen: false,
-          isAdmin: this.props.adminStatus,
-      };
-  }
+        this.toggle = this.toggle.bind(this);
+        this.linkHandler = this.linkHandler.bind(this);
+        this.state = {
+            isOpen: false,
+            isAdmin: this.props.adminStatus,
+        };
+    }
+
   toggle() {
     this.setState({
       isOpen: !this.state.isOpen
@@ -35,16 +37,16 @@ class Navigation extends React.Component {
     this._isMounted = true;
   }
 
-  linkHandler(destination) {
-      if (destination === 'logout') {
-          this.props.redirectFnc('logout');
-          /*axios.post(`${process.env.BACK_END_URL}/logout`).then(() => {
-            this.props.history.push('/');
-        });*/
-      } else if (destination === 'manage') {
-          this.props.redirectFnc('manage');
-          //this.props.history.push('/manage');
-    }
+    linkHandler(destination) {
+        if (destination === 'logout') {
+            axios.post(`${process.env.BACK_END_URL}/logout`).then(() => {
+                this.props.history.push("/");
+            });
+            return;
+        }
+        if(this.props.checkPermission(destination)) {
+            this.props.history.push("/" + destination);       
+        }
   }
 
   render() {

@@ -9,9 +9,10 @@ class Home extends React.Component {
     }
 
     render() {
+        console.log(this.props);
         return (
             <div>
-                <Navigation adminStatus={true}/>
+                <Navigation checkPermission={this.props.checkPermission} adminStatus={true}/>
             </div>
         );
     }

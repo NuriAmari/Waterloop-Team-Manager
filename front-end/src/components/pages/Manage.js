@@ -10,7 +10,7 @@ class Manage extends React.Component {
     render() {
         return (
             <div>
-                <Navigation adminStatus={true}/>
+                <Navigation checkPermission={this.props.checkPermission} adminStatus={true}/>
             </div>
         );
     }

@@ -4,7 +4,7 @@ import axios from 'axios';
 import React from 'react';
 axios.default.withCredentials = true;
 
-const RequireAuth = (Component) => { 
+const RequireAuth = (Component, checkStatus) => { 
     
     class App extends React.Component { 
         _isMounted = false;
@@ -18,26 +18,11 @@ const RequireAuth = (Component) => {
 
         componentDidMount() {
             this._isMounted = true;
-            if (this.props.location === '\\manage') {
-                axios.get(`${process.env.BACK_END_URL}\\user`).then((response) => {
-                    if (this._isMounted) {
-                        if (response.data.user.admin) {
-                            this.setState({isAuthenticated: true, isLoading: false});
-                        } else {
-                            this.setState({isLoading: false});
-                        }
-                    }
-                });
+            let authenticated = checkStatus(this.props.location);
+            if (authenticated) {
+                if (this._isMounted) this.setState({isAuthenticated: true, isLoading: false});
             } else {
-                axios.get(`${process.env.BACK_END_URL}\\authCheck`).then((response) => {
-                    if (this._isMounted) {
-                        if (response.data.authStatus) {
-                            this.setState({isAuthenticated: true, isLoading: false});
-                        } else {
-                            this.setState({isLoading: false});
-                        }
-                    }
-                });
+                if (this._isMounted) this.setState({isAuthenticated: false, isLoading: false});
             }
         } 
 
@@ -53,7 +38,7 @@ const RequireAuth = (Component) => {
            if(!isAuthenticated) {
                return <Redirect to="/" />
            }
-           return <Component {...this.props} /> 
+           return <Component checkPermission={checkStatus} {...this.props} /> 
         }
     } 
     return withRouter(App);
