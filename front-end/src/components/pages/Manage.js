@@ -8,11 +8,7 @@ class Manage extends React.Component {
         super(props);
     }
     render() {
-        return (
-            <div>
-                <Navigation checkPermission={this.props.checkPermission} adminStatus={true}/>
-            </div>
-        );
+        return <div>Manage</div>;
     }
 }
 

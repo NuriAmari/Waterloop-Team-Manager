@@ -16,46 +16,45 @@ const config = {
     entry: './src/index.js',
     output: {
         path: path.resolve(__dirname, 'dist'),
-        filename: 'bundle.js'
+        filename: 'bundle.js',
+        publicPath: '/',
     },
     devServer: {
         historyApiFallback: true,
     },
     module: {
         rules: [
-            { 
+            {
                 test: /\.(js|jsx)$/,
                 exclude: /node_modules/,
-                use: 'babel-loader'
+                use: 'babel-loader',
             },
             {
-            test: /\.css$/,
-                use: ExtractTextPlugin.extract(
-                    {
-                        fallback: 'style-loader',
-                        use: ['css-loader']
-                    }
-                )
+                test: /\.css$/,
+                use: ExtractTextPlugin.extract({
+                    fallback: 'style-loader',
+                    use: ['css-loader'],
+                }),
             },
             {
                 test: /\.(png|jpg|gif)$/,
                 use: [
                     {
-                        loader: 'file-loader'
-                    }
-                ]
-            }
-        ]
+                        loader: 'file-loader',
+                    },
+                ],
+            },
+        ],
     },
     plugins: [
         new webpack.DefinePlugin(envKeys),
         new HtmlWebPackPlugin({
             hash: true,
-            filename: "index.html",  //target html
-            template: "./dist/index.html" //source html
+            filename: 'index.html', //target html
+            template: './dist/index.html', //source html
         }),
         new ExtractTextPlugin({ filename: 'css/style.css' }),
-    ]
+    ],
 };
 
 module.exports = config;
