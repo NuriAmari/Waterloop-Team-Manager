@@ -65,7 +65,9 @@ class NewUserModal extends React.Component {
         // TODO basic validation
         const requestBody = { ...this.state };
         console.log(requestBody);
+        console.log(JSON.stringify(requestBody));
         fetch(`${process.env.BACK_END_URL}/newUser`, {
+            headers: { 'Content-Type': 'application/json' },
             method: 'post',
             body: JSON.stringify(requestBody),
         }).then(this.props.toggle());

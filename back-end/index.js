@@ -3,6 +3,7 @@ const session = require('express-session');
 const app = express();
 const cors = require('cors');
 const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
 require('dotenv').config();
 
 // db models
@@ -46,6 +47,8 @@ app.use(
 );
 
 app.use(express.json());
+
+app.use(bodyParser.json());
 
 // set session data to only save on change and initial modification
 app.use(
@@ -117,6 +120,8 @@ app.post('/newUser', (req, res) => {
             res.end(JSON.stringify(response));
         }
     });*/
+    console.log(req);
+    console.log(req.body);
     console.log('New User: ', req.body);
     res.end();
 });
