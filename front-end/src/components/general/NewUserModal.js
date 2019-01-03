@@ -15,6 +15,7 @@ import {
     Label,
     FormText,
 } from 'reactstrap';
+import styled from 'styled-components';
 
 class NewUserModal extends React.Component {
     constructor(props) {
@@ -25,12 +26,14 @@ class NewUserModal extends React.Component {
             lastname: null,
             team: null,
             admin: false,
+            requiredFields: {},
         };
         this.changeHandler = this.changeHandler.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
     }
 
     changeHandler(event) {
+        console.log(this.refs);
         event.persist();
         if (event.target.name === 'email') {
             this.setState(prevState => ({
@@ -62,6 +65,18 @@ class NewUserModal extends React.Component {
     }
 
     onSubmit() {
+        for (const field in this.state) {
+            if (!this.state[field]) {
+                this.setState(prevState => ({
+                    ...prevState,
+                    requiredFields: {
+                        ...prevState.requiredFields,
+                        [field]: true,
+                    },
+                }));
+                return;
+            }
+        }
         // TODO basic validation
         const requestBody = { ...this.state };
         console.log(requestBody);
@@ -71,18 +86,22 @@ class NewUserModal extends React.Component {
             method: 'post',
             body: JSON.stringify(requestBody),
         }).then(this.props.toggle());
+        this.setState(prevState => ({
+            ...prevState,
+            requiredFields: {},
+        }));
     }
 
     render() {
         return (
-            <div>
+            <Wrapper>
                 <Modal isOpen={this.props.modal} toggle={this.props.toggle}>
                     <ModalHeader toggle={this.props.toggle}>
                         Add New User
                     </ModalHeader>
                     <ModalBody>
                         <div>
-                            <Form>
+                            <Form noValidate>
                                 <FormGroup row>
                                     <Label for="email" sm={2}>
                                         Email
@@ -92,6 +111,12 @@ class NewUserModal extends React.Component {
                                             type="email"
                                             name="email"
                                             id="email"
+                                            ref="email"
+                                            className={
+                                                this.state.requiredFields.email
+                                                    ? 'needsvalidation'
+                                                    : undefined
+                                            }
                                             onChange={this.changeHandler}
                                         />
                                     </Col>
@@ -105,6 +130,13 @@ class NewUserModal extends React.Component {
                                             type="text"
                                             name="firstname"
                                             id="firstname"
+                                            ref="firstname"
+                                            className={
+                                                this.state.requiredFields
+                                                    .firstname
+                                                    ? 'needsvalidation'
+                                                    : undefined
+                                            }
                                             onChange={this.changeHandler}
                                         />
                                     </Col>
@@ -118,6 +150,13 @@ class NewUserModal extends React.Component {
                                             type="text"
                                             name="lastname"
                                             id="lastname"
+                                            ref="lastname"
+                                            className={
+                                                this.state.requiredFields
+                                                    .lastname
+                                                    ? 'needsvalidation'
+                                                    : undefined
+                                            }
                                             onChange={this.changeHandler}
                                         />
                                     </Col>
@@ -131,8 +170,18 @@ class NewUserModal extends React.Component {
                                             type="select"
                                             name="subteam"
                                             id="subteam"
+                                            ref="subteam"
+                                            className={
+                                                this.state.requiredFields
+                                                    .subteam
+                                                    ? 'needsvalidation'
+                                                    : undefined
+                                            }
                                             onChange={this.changeHandler}
                                         >
+                                            <option disabled defaultValue>
+                                                Pick Team
+                                            </option>
                                             <option>Software</option>
                                             <option>Mechanical</option>
                                             <option>Electrical</option>
@@ -168,9 +217,15 @@ class NewUserModal extends React.Component {
                         </Button>
                     </ModalFooter>
                 </Modal>
-            </div>
+            </Wrapper>
         );
     }
 }
+
+const Wrapper = styled.div`
+    .required {
+        border-color: red !important;
+    }
+`;
 
 export default NewUserModal;
