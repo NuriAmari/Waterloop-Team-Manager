@@ -10,69 +10,79 @@ const User = require('./models/user');
 const OnboardingCode = require('./models/onboardingcode');
 
 // connect to db
-mongoose.connect(process.env.DB_URL, {useNewUrlParser: true }, (error) => {
-    if (error) {
-        console.log(error);
-    } else {
-        console.log("db connection established");
+mongoose.connect(
+    process.env.DB_URL,
+    { useNewUrlParser: true },
+    error => {
+        if (error) {
+            console.log(error);
+        } else {
+            console.log('db connection established');
+        }
     }
-});
+);
 
 // create a list of domains to white list from cors protection
-const whitelist = ['file:///Users/nuriamari/Developer/Waterloop/Waterloop-Team-Manager/front-end/dist/index.html', 'http://localhost:8080']
+const whitelist = [
+    'file:///Users/nuriamari/Developer/Waterloop/Waterloop-Team-Manager/front-end/dist/index.html',
+    'http://localhost:8080',
+];
 const corsOptions = {
-  origin: function (origin, callback) {
-    if (whitelist.indexOf(origin) !== -1) {
-      callback(null, true)
-    } else {
-      callback(new Error('Not allowed by CORS'))
-    }
-  }
-}
+    origin: function(origin, callback) {
+        if (whitelist.indexOf(origin) !== -1) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+};
 
-app.use(cors({
-    origin:['http://localhost:8080'],
-    methods:['GET','POST'],
-    credentials: true // enable set cookie
-}));
+app.use(
+    cors({
+        origin: ['http://localhost:8080'],
+        methods: ['GET', 'POST'],
+        credentials: true, // enable set cookie
+    })
+);
 
 app.use(express.json());
 
 // set session data to only save on change and initial modification
-app.use(session({
-    secret: 'waterwaterwater',
-    resave: true,
-    saveUninitialized: true,
-    cookie: { secure: false }
-}));
-
+app.use(
+    session({
+        secret: 'waterwaterwater',
+        resave: true,
+        saveUninitialized: true,
+        cookie: { secure: false },
+    })
+);
 
 app.post('/login', (req, res) => {
-    User.findOne({username: req.body.username}, (error, userData) => {
+    User.findOne({ username: req.body.username }, (error, userData) => {
         if (error) throw error;
-        res.setHeader('200', {'Content-Type': 'application/json'});
+        res.setHeader('200', { 'Content-Type': 'application/json' });
         if (!userData) {
             var response = {
-                'authStatus': false,
-                'user': false,
-                'password': false,
+                authStatus: false,
+                user: false,
+                password: false,
             };
             res.end(JSON.stringify(response));
         } else {
             if (userData.password === req.body.password) {
                 var response = {
-                    'authStatus': true,
-                    'password': true,
-                    'user': true,
-                    'username': userData.username,
-                }   
+                    authStatus: true,
+                    password: true,
+                    user: true,
+                    username: userData.username,
+                };
             } else {
                 var response = {
-                    'authStatus': false,
-                    'password': false,
-                    'user': true,
-                    'username': userData.username,
-                }
+                    authStatus: false,
+                    password: false,
+                    user: true,
+                    username: userData.username,
+                };
             }
             req.session.authenticated = true;
             req.session.userId = userData.id;
@@ -83,19 +93,19 @@ app.post('/login', (req, res) => {
     });
 });
 
-app.post('/newUser', (req,res) => {
-    res.setHeader('200', {'Content-Type': 'application/json'});
-    OnboardingCode.findOne({code: req.body.code}, (err, data) => {
+app.post('/newUser', (req, res) => {
+    res.setHeader('200', { 'Content-Type': 'application/json' });
+    OnboardingCode.findOne({ code: req.body.code }, (err, data) => {
         let response;
         if (data) {
             let user = new User();
-            user.name = req.body.firstname + " " + req.body.lastname;
+            user.name = req.body.firstname + ' ' + req.body.lastname;
             user.firstname = req.body.firstname;
             user.lastname = req.body.lastname;
             user.password = req.body.password;
             user.admin = data.admin;
-            user.save((err) => {});
-            OnboardingCode.deleteOne({code: req.body.code}, (err) => {});
+            user.save(err => {});
+            OnboardingCode.deleteOne({ code: req.body.code }, err => {});
             response = {
                 codeValid: true,
             };
@@ -103,7 +113,7 @@ app.post('/newUser', (req,res) => {
         } else {
             response = {
                 codeValue: false,
-            }
+            };
             res.end(JSON.stringify(response));
         }
     });
@@ -115,10 +125,10 @@ app.post('/logout', (req, res) => {
 });
 
 app.get('/user', (req, res) => {
-    User.findOne({_id: req.session.userId}, (err, userData) => {
-        res.setHeader('200', {'Content-Type': 'application/json'});
+    User.findOne({ _id: req.session.userId }, (err, userData) => {
+        res.setHeader('200', { 'Content-Type': 'application/json' });
         if (!userData) {
-            throw("A user with active session should always exist");
+            throw 'A user with active session should always exist';
         } else {
             res.end(JSON.stringify(userData));
         }
@@ -127,29 +137,33 @@ app.get('/user', (req, res) => {
 
 app.get('/allUsers', (req, res) => {
     if (req.session.authenticated) {
-        User.findOne({_id: req.session.userId}, (err, userData) => {
+        User.findOne({ _id: req.session.userId }, (err, userData) => {
             if (err) throw err;
             if (userData.admin) {
                 User.find({}, (error, data) => {
                     if (error) throw error;
-                    res.setHeader('200', {'Content-Type': 'application/json'}); 
-                    res.end(data);
+                    res.setHeader('200', {
+                        'Content-Type': 'application/json',
+                    });
+                    console.log(data);
+                    res.end(JSON.stringify(data));
                 });
             }
         });
     } else {
-        res.end("request denied");
+        res.end('request denied');
     }
 });
 
 app.get('/authCheck', (req, res) => {
-    res.setHeader('200', {'Content-Type': 'application/json'});
-    const response = { 
-        'authStatus': req.session.authenticated,
-        'admin': req.session.admin,
-    }
-    res.end(JSON.stringify(response)); 
+    res.setHeader('200', { 'Content-Type': 'application/json' });
+    const response = {
+        authStatus: req.session.authenticated,
+        admin: req.session.admin,
+    };
+    res.end(JSON.stringify(response));
 });
 
-app.listen(process.env.PORT, () => console.log(`Example app listening on port ${process.env.PORT}!`));
-
+app.listen(process.env.PORT, () =>
+    console.log(`Example app listening on port ${process.env.PORT}!`)
+);
