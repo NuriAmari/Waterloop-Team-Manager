@@ -95,7 +95,7 @@ app.post('/login', (req, res) => {
 
 app.post('/newUser', (req, res) => {
     res.setHeader('200', { 'Content-Type': 'application/json' });
-    OnboardingCode.findOne({ code: req.body.code }, (err, data) => {
+    /*OnboardingCode.findOne({ code: req.body.code }, (err, data) => {
         let response;
         if (data) {
             let user = new User();
@@ -116,7 +116,9 @@ app.post('/newUser', (req, res) => {
             };
             res.end(JSON.stringify(response));
         }
-    });
+    });*/
+    console.log('New User: ', req.body);
+    res.end();
 });
 
 app.post('/logout', (req, res) => {

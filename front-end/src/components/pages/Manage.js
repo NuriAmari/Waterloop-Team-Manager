@@ -28,7 +28,7 @@ class Manage extends React.Component {
     render() {
         return (
             <Wrapper>
-                <NewUserModal toggle={this.toggle} modal={true} />
+                <NewUserModal toggle={this.toggle} modal={this.state.modal} />
                 <div>
                     <h3>Current Users</h3>
                     <Button onClick={() => this.toggle()} color="primary">
