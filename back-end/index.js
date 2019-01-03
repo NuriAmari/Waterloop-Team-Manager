@@ -97,32 +97,15 @@ app.post('/login', (req, res) => {
 });
 
 app.post('/newUser', (req, res) => {
-    res.setHeader('200', { 'Content-Type': 'application/json' });
-    /*OnboardingCode.findOne({ code: req.body.code }, (err, data) => {
-        let response;
-        if (data) {
-            let user = new User();
-            user.name = req.body.firstname + ' ' + req.body.lastname;
-            user.firstname = req.body.firstname;
-            user.lastname = req.body.lastname;
-            user.password = req.body.password;
-            user.admin = data.admin;
-            user.save(err => {});
-            OnboardingCode.deleteOne({ code: req.body.code }, err => {});
-            response = {
-                codeValid: true,
-            };
-            res.end(JSON.stringify(response));
-        } else {
-            response = {
-                codeValue: false,
-            };
-            res.end(JSON.stringify(response));
-        }
-    });*/
-    console.log(req);
-    console.log(req.body);
-    console.log('New User: ', req.body);
+    const code = new OnboardingCode();
+    code.adminCode = req.body.admin;
+    code.code = `${req.body.firstname.substring(0, 1)}${req.body.lastname}@${
+        req.body.subteam
+    }${new Date().getFullYear()}`;
+    console.log(code.code);
+    code.save(err => {
+        if (err) throw err;
+    });
     res.end();
 });
 
