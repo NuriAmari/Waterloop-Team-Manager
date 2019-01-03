@@ -24,10 +24,14 @@ class NewUserModal extends React.Component {
             email: null,
             firstname: null,
             lastname: null,
-            team: null,
+            subteam: null,
             admin: false,
             requiredFields: {},
         };
+        this.email = React.createRef();
+        this.firstname = React.createRef();
+        this.lastname = React.createRef();
+        this.subteam = React.createRef();
         this.changeHandler = this.changeHandler.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
     }
@@ -111,7 +115,7 @@ class NewUserModal extends React.Component {
                                             type="email"
                                             name="email"
                                             id="email"
-                                            ref="email"
+                                            ref={this.email}
                                             className={
                                                 this.state.requiredFields.email
                                                     ? 'needsvalidation'
@@ -130,7 +134,7 @@ class NewUserModal extends React.Component {
                                             type="text"
                                             name="firstname"
                                             id="firstname"
-                                            ref="firstname"
+                                            ref={this.firstname}
                                             className={
                                                 this.state.requiredFields
                                                     .firstname
@@ -150,7 +154,7 @@ class NewUserModal extends React.Component {
                                             type="text"
                                             name="lastname"
                                             id="lastname"
-                                            ref="lastname"
+                                            ref={this.lastname}
                                             className={
                                                 this.state.requiredFields
                                                     .lastname
@@ -170,7 +174,7 @@ class NewUserModal extends React.Component {
                                             type="select"
                                             name="subteam"
                                             id="subteam"
-                                            ref="subteam"
+                                            ref={this.subteam}
                                             className={
                                                 this.state.requiredFields
                                                     .subteam

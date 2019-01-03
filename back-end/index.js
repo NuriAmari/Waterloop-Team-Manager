@@ -1,9 +1,12 @@
+// TODO actually do some error handling
+
 const express = require('express');
 const session = require('express-session');
 const app = express();
 const cors = require('cors');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const nodemailer = require('nodemailer');
 require('dotenv').config();
 
 // db models
@@ -99,6 +102,8 @@ app.post('/login', (req, res) => {
 app.post('/newUser', (req, res) => {
     const code = new OnboardingCode();
     code.adminCode = req.body.admin;
+    code.team = req.body.subteam;
+    code.email = req.body.email;
     code.code = `${req.body.firstname.substring(0, 1)}${req.body.lastname}@${
         req.body.subteam
     }${new Date().getFullYear()}`;
@@ -107,6 +112,27 @@ app.post('/newUser', (req, res) => {
         if (err) throw err;
     });
     res.end();
+});
+
+app.post('/registerUser', async (req, res) => {
+    const { code, firstname, lastname, team, password } = req.body;
+    OnboardingCode.findOne({ code: code }, (err, data) => {
+        const response = { registerSuccessfull: false };
+        res.setHeader('200', { 'Content-Type': 'application/json' });
+        if (data) {
+            const user = new User();
+            user.email = data.email;
+            user.firstname = firstname;
+            user.lastname = lastname;
+            user.password = password;
+            user.team = data.team;
+            user.admin = data.admin;
+            await user.save();
+            await data.remove();
+            response.registerSuccessfull = true;
+        }
+        res.end(JSON.stringify(response));
+    });
 });
 
 app.post('/logout', (req, res) => {
