@@ -114,19 +114,21 @@ app.post('/newUser', (req, res) => {
     res.end();
 });
 
-app.post('/registerUser', async (req, res) => {
-    const { code, firstname, lastname, team, password } = req.body;
-    OnboardingCode.findOne({ code: code }, (err, data) => {
+app.post('/registerUser', (req, res) => {
+    const { onboardingcode, firstname, lastname, password } = req.body;
+    OnboardingCode.findOne({ code: onboardingcode }, async (err, data) => {
         const response = { registerSuccessfull: false };
         res.setHeader('200', { 'Content-Type': 'application/json' });
         if (data) {
+            console.log(data);
             const user = new User();
             user.email = data.email;
             user.firstname = firstname;
             user.lastname = lastname;
+            user.username = firstname + lastname;
             user.password = password;
             user.team = data.team;
-            user.admin = data.admin;
+            user.admin = data.adminCode;
             await user.save();
             await data.remove();
             response.registerSuccessfull = true;

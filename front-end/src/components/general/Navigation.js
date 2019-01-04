@@ -37,6 +37,12 @@ class Navigation extends React.Component {
 
     componentDidMount() {
         this._isMounted = true;
+        this.state.isAdmin.then(adminStatus => {
+            this.setState(prevState => ({
+                ...prevState,
+                isAdmin: adminStatus,
+            }));
+        });
     }
 
     linkHandler(destination) {

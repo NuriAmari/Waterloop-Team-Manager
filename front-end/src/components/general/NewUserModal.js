@@ -14,6 +14,7 @@ import {
     FormGroup,
     Label,
     FormText,
+    FormFeedback,
 } from 'reactstrap';
 import styled from 'styled-components';
 
@@ -69,18 +70,21 @@ class NewUserModal extends React.Component {
     }
 
     onSubmit() {
+        let formComplete = true;
         for (const field in this.state) {
-            if (!this.state[field]) {
-                this.setState(prevState => ({
-                    ...prevState,
-                    requiredFields: {
-                        ...prevState.requiredFields,
-                        [field]: true,
-                    },
-                }));
-                return;
+            if (this.state[field] === null) {
+                console.log(field);
+                formComplete = false;
             }
+            this.setState(prevState => ({
+                ...prevState,
+                requiredFields: {
+                    ...prevState.requiredFields,
+                    [field]: this.state[field] === null,
+                },
+            }));
         }
+        if (!formComplete) return;
         // TODO basic validation
         const requestBody = { ...this.state };
         console.log(requestBody);
@@ -116,13 +120,14 @@ class NewUserModal extends React.Component {
                                             name="email"
                                             id="email"
                                             ref={this.email}
-                                            className={
+                                            invalid={
                                                 this.state.requiredFields.email
-                                                    ? 'needsvalidation'
-                                                    : undefined
                                             }
                                             onChange={this.changeHandler}
                                         />
+                                        <FormFeedback invalid="true">
+                                            Email is required
+                                        </FormFeedback>
                                     </Col>
                                 </FormGroup>
                                 <FormGroup row>
@@ -134,15 +139,16 @@ class NewUserModal extends React.Component {
                                             type="text"
                                             name="firstname"
                                             id="firstname"
-                                            ref={this.firstname}
-                                            className={
+                                            invalid={
                                                 this.state.requiredFields
                                                     .firstname
-                                                    ? 'needsvalidation'
-                                                    : undefined
                                             }
+                                            ref={this.firstname}
                                             onChange={this.changeHandler}
                                         />
+                                        <FormFeedback invalid="true">
+                                            First name is required
+                                        </FormFeedback>
                                     </Col>
                                 </FormGroup>
                                 <FormGroup row>
@@ -155,14 +161,15 @@ class NewUserModal extends React.Component {
                                             name="lastname"
                                             id="lastname"
                                             ref={this.lastname}
-                                            className={
+                                            onChange={this.changeHandler}
+                                            invalid={
                                                 this.state.requiredFields
                                                     .lastname
-                                                    ? 'needsvalidation'
-                                                    : undefined
                                             }
-                                            onChange={this.changeHandler}
                                         />
+                                        <FormFeedback invalid="true">
+                                            Last name is required
+                                        </FormFeedback>
                                     </Col>
                                 </FormGroup>
                                 <FormGroup row>
@@ -175,22 +182,24 @@ class NewUserModal extends React.Component {
                                             name="subteam"
                                             id="subteam"
                                             ref={this.subteam}
-                                            className={
+                                            onChange={this.changeHandler}
+                                            invalid={
                                                 this.state.requiredFields
                                                     .subteam
-                                                    ? 'needsvalidation'
-                                                    : undefined
                                             }
-                                            onChange={this.changeHandler}
+                                            defaultValue="Pick A Team"
                                         >
-                                            <option disabled defaultValue>
-                                                Pick Team
+                                            <option disabled>
+                                                Pick A Team
                                             </option>
                                             <option>Software</option>
                                             <option>Mechanical</option>
                                             <option>Electrical</option>
                                             <option>Marketing</option>
                                         </Input>
+                                        <FormFeedback invalid="true">
+                                            Subteam is required
+                                        </FormFeedback>
                                     </Col>
                                 </FormGroup>
                                 <FormGroup row>
