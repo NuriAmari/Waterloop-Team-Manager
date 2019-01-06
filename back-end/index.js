@@ -182,6 +182,20 @@ app.get('/authCheck', (req, res) => {
     res.end(JSON.stringify(response));
 });
 
+app.get('/getResources', (req, res) => {
+    res.setHeader('200', { 'Content-Type': 'application/json' });
+    console.log(req);
+    User.findOne({ _id: req.session.userId }, (err, userData) => {
+        if (userData) {
+            console.log(userData);
+            res.end(JSON.stringify(userData));
+        } else {
+            console.log('no user found');
+            res.end(JSON.stringify({ msg: 'No user found' }));
+        }
+    });
+});
+
 app.listen(process.env.PORT, () =>
     console.log(`Example app listening on port ${process.env.PORT}!`)
 );

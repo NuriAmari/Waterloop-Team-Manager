@@ -7,16 +7,30 @@ import ResourceCard from '../general/ResourceCard';
 class Home extends React.Component {
     constructor(props) {
         super(props);
+        this.state = {
+            resources: [],
+        };
+    }
+
+    componentDidMount() {
+        console.log('component did mount');
+        fetch(`${process.env.BACK_END_URL}/getResources`, {
+            credentials: 'include',
+        })
+            .then(response => response.json())
+            .then(response => {
+                this.setState({ resources: response.resources });
+
+                console.log(this.state.resources);
+            });
     }
 
     render() {
-        console.log(this.props);
         return (
             <Resources>
-                <ResourceCard title="Github" />
-                <ResourceCard title="Drive" />
-                <ResourceCard title="Overleaf" />
-                <ResourceCard title="Slack" />
+                {this.state.resources.map(name => (
+                    <ResourceCard title={name} />
+                ))}
             </Resources>
         );
     }
