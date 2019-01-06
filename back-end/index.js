@@ -31,6 +31,7 @@ const whitelist = [
     'file:///Users/nuriamari/Developer/Waterloop/Waterloop-Team-Manager/front-end/dist/index.html',
     'http://localhost:8080',
 ];
+
 const corsOptions = {
     origin: function(origin, callback) {
         if (whitelist.indexOf(origin) !== -1) {
